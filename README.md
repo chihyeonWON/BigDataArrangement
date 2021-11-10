@@ -43,3 +43,40 @@ ts-node ./src/test/getFileNameAndNumber-test.ts data/fake.csv 100000
 ```typescript
 data/fake.csv 100000
 ```
+
+### 파일 처리 비동기 함수를 프로미스로 구현하기
+
+#### fs.access API로 디렉터리나 파일 확인하기
+
+src/fileApi/fileExists.ts
+```typescript
+import * as fs from 'fs'
+
+export const fileExists = (filepath: string): Promise<boolean> => 
+    new Promise(resolve => fs.access(filepath, error => resolve(error ? false : true)))
+
+```
+#### 테스트 파일 생성
+src/test/fileExists-test.ts
+```typescript
+import { fileExists } from "../fileApi/fileExists";
+
+const exists = async(filepath) => {
+    const result = await fileExists(filepath)
+    console.log(`${filepath} ${result ? 'exists' : 'not exists'}`)
+}
+
+exists('./package.json')
+exists('./package')
+```
+
+#### 테스트 결과 확인 명령
+```typescript 
+ts-node ./src/test/fileExists-test.ts 
+```
+
+#### 테스트 결과
+```typescript
+./package.json exists
+./package not exists
+```
