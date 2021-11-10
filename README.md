@@ -15,3 +15,31 @@ ts-node src/test/processArgs-test.ts data/fake.csv 100000
 ```
 
 ![processArgs](https://user-images.githubusercontent.com/58906858/141070644-365c1a57-7dd0-4a19-8856-384119662fa1.png)
+
+```typescript
+export type FileNameAndNumber = [string, number]
+
+export const getFileNameAndNumber = (defaultFilename: string,
+    defaultNumberOfFakeData: number): FileNameAndNumber => {
+        const [bin, node, filename, numberOfFakeData] = process.argv
+        return [filename || defaultFilename, numberOfFakeData ?
+            parseInt(numberOfFakeData, 10) : defaultNumberOfFakeData]
+    }
+```
+
+```typescript
+import { getFileNameAndNumber } from "../utils/getFileNameAndNumber";
+
+const [filename, numberOfFakeItems] = getFileNameAndNumber('data/fake.csv', 100000)
+console.log(filename, numberOfFakeItems)
+```
+
+## 명령
+```typescript
+ts-node ./src/test/getFileNameAndNumber-test.ts data/fake.csv 100000
+```
+
+## 실행결과
+```typescript
+data/fake.csv 100000
+```
