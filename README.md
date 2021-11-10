@@ -34,12 +34,12 @@ const [filename, numberOfFakeItems] = getFileNameAndNumber('data/fake.csv', 1000
 console.log(filename, numberOfFakeItems)
 ```
 
-## 명령
+### 명령
 ```typescript
 ts-node ./src/test/getFileNameAndNumber-test.ts data/fake.csv 100000
 ```
 
-## 실행결과
+### 실행결과
 ```typescript
 data/fake.csv 100000
 ```
