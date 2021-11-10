@@ -80,3 +80,37 @@ ts-node ./src/test/fileExists-test.ts
 ./package.json exists
 ./package not exists
 ```
+
+### mkdirp 패키지로 디렉터리 생성 함수 만들기
+```typescript
+import mkdirp from 'mkdirp';
+import {fileExists} from './fileExists';
+
+export const mkdir = (dirname: string): Promise<string> =>
+    new Promise(async (resolve, reject) => {
+        const alreadyExists = await fileExists(dirname)
+            alreadyExists ? resolve(dirname) : 
+                mkdirp(dirname).then(resolve).catch(reject)
+    })
+```
+
+#### 테스트 파일 생성
+```typescript
+import {mkdir} from '../fileApi/mkdir';
+
+const makeDataDir = async(dirname: string) => {
+    let result = await mkdir(dirname)
+    console.log(`'${result}' dir created`) // './data/today' dir created
+}
+
+makeDataDir('./data/today')
+```
+
+#### 실행 명령 코드
+```typescript
+ts-node ./src/test/mkdir-test.ts   
+```
+
+#### 실행결과
+
+./data/today 디렉터리가 생성된다
