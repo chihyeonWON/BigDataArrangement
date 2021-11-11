@@ -240,4 +240,44 @@ read '{
 }' from ./data/test.json file.
 ```
 
+### fs.appendFile API로 기존 파일 내용에 내용 추가하기
 
+src/fileApi/appendFile.ts
+```typescript
+import * as fs from 'fs'
+
+export const appendFile = (filename: string, data: any): Promise<any> => 
+    new Promise((resolve, reject) => {
+    fs.appendFile(filename, data, 'utf8', (error: Error) => {
+        error ? reject(error) : resolve(data)
+    })
+})
+```
+
+#### appendFile 함수 테스트 파일 생성
+
+src/test/appnedFile-test.ts
+```typescript
+import * as path from 'path'
+import {appendFile} from '../fileApi/appendFile'
+import {mkdir} from '../fileApi/mkdir'
+
+const appendTest = async(filename: string, data: any) => {
+    const result = await appendFile(filename, data) 
+    console.log(`append ${result} to ${filename}`)
+}
+
+mkdir('./data')
+    .then(s => appendTest('./data/hello.txt', 'Hi there!'))
+    .catch((e: Error) => console.log(e.message))
+```
+
+#### 테스트 실행 코드
+```typescript
+ts-node ./src/test/appendFile-test.ts
+```
+
+#### 테스트 코드 실행 결과
+```typescript 
+append Hi there! to ./data/hello.txt
+```
