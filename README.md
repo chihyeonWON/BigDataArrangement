@@ -188,3 +188,56 @@ ts-node src/test/writeFile-test.ts
 
 #### 실행결과
 ./data 디렉터리와 hello.txt, test.json 파일을 생성한다.
+```typescript
+write hello world to ./data/hello.txt
+write {
+  "name": "Jack",
+  "age": 32
+} to ./data/test.json
+```
+
+#### fs.readFile API로 파일 내용 읽는 함수 생성
+
+src/fileApi/readFile.ts
+```typescript
+import * as fs from 'fs'
+
+export const readFile = (filename: string): Promise<any> => 
+    new Promise<any>((resolve, reject) => {
+        fs.readFile(filename, 'utf8', (error: Error, data: any) => {
+            error ? reject(error) : resolve(data)
+     })
+})
+```
+
+#### readFile 함수 테스트 파일 생성
+
+src/test/readFile-test.ts
+```typescript
+import {readFile} from '../fileApi/readFile'
+
+const readTest = async(filename: string) => {
+    const result = await readFile(filename)
+    console.log(`read '${result}' from ${filename} file.`)
+}
+
+readTest('./data/hello.txt')
+    .then(s => readTest('./data/test.json'))
+    .catch((e: Error) => console.log(e.message))
+```
+
+#### readFile API 테스트 코드
+```typescript
+ts-node ./src/test/readFile-test.ts
+```
+
+#### 실행결과
+```typescript
+read 'hello world' from ./data/hello.txt file.
+read '{
+  "name": "Jack",
+  "age": 32
+}' from ./data/test.json file.
+```
+
+
