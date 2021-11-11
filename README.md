@@ -145,4 +145,46 @@ deleteDataDir('./data/today')
 ts-node ./src/test/rmdir-test.ts
 ```
 
+### fs.writeFile API로 파일 생성하기
 
+#### 파일 생성 함수 writeFile 생성
+
+src/file/writeFile.ts
+```typescript
+import * as fs from 'fs'
+
+export const writeFile = (filename: string, data: any): Promise<any> =>
+    new Promise((resolve, reject) => {
+        fs.writeFile(filename, data, 'utf8', (error: Error) => {
+            error ? reject(error) : resolve(data)
+    })
+})
+```
+
+#### ./data 디렉터리를 생성하고 hello.txt와 test.json 파일을 writeFile 함수로 생성하는 코드
+
+src/test/writeFile-test.ts
+```typescript
+import * as path from 'path'
+import {writeFile} from '../fileApi/writeFile'
+import {mkdir} from '../fileApi/mkdir'
+import mkdirp = require('mkdirp')
+
+const writeTest = async(filename: string, data: any) => {
+    const result = await writeFile(filename, data)
+    console.log(`write ${result} to ${filename}`)
+}
+
+mkdir('./data')
+    .then(s => writeTest('./data/hello.txt', 'hello world'))
+    .then(s => writeTest('./data/test.json', JSON.stringify({name: 'Jack', age: 32}, null, 2)))
+    .catch((e: Error) => console.log(e.message))
+```
+
+#### writeFile-test.ts 파일 실행 코드
+```typescript
+ts-node src/test/writeFile-test.ts
+```
+
+#### 실행결과
+./data 디렉터리와 hello.txt, test.json 파일을 생성한다.
