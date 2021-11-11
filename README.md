@@ -114,3 +114,35 @@ ts-node ./src/test/mkdir-test.ts
 #### 실행결과
 
 ./data/today 디렉터리가 생성된다
+
+src/fileApi/rmdir.ts
+### rimraf 패키지로 디렉터리 삭제 함수 만들기
+```typescript
+import rimraf from 'rimraf'
+import {fileExists} from './fileExists'
+
+export const rmdir = (dirname: string): Promise<string> =>
+    new Promise(async(resolve, reject) => {
+    const alreadyExists = await fileExists(dirname)
+        !alreadyExists ? resolve(dirname) : 
+        rimraf(dirname, error => error ? reject(error) : resolve(dirname))
+})
+```
+#### 테스트 파일 생성
+src/test/rmdir-test.ts
+```typescript
+import {rmdir} from '../fileApi/rmdir'
+
+const deleteDataDir = async (dir) => {
+    const result = await rmdir(dir)
+    console.log(`'${result}' dir deleted.`) // './data/today' dir deleted.
+}
+deleteDataDir('./data/today')
+```
+
+#### 테스트 파일 실행 코드
+```typescript
+ts-node ./src/test/rmdir-test.ts
+```
+
+
