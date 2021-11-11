@@ -281,3 +281,47 @@ ts-node ./src/test/appendFile-test.ts
 ```typescript 
 append Hi there! to ./data/hello.txt
 ```
+### fs.unlink API로 파일 삭제하기
+
+#### ./data 디렉터리와 ./data 파일에 생성된 hello.txt 파일과 test.json 파일을 삭제하는 deleteFile 파일 생성
+src/fileApi/deleteFile.ts
+```typescript
+import * as fs from 'fs'
+import {fileExists} from './fileExists'
+
+export const deleteFile = (filename: string): Promise<string> =>
+    new Promise<any>(async(resolve, reject) => {
+    const alreadyExists = await fileExists(filename)
+    !alreadyExists ? resolve(filename) : 
+        fs.unlink(filename, (error: Error) => error ? reject(error) : resolve(filename))
+})
+```
+
+#### deleteFile 함수 테스트 파일 생성
+
+src/test/deleteFile-test.ts
+```typescript
+import {deleteFile} from '../fileApi/deleteFile'
+import {rmdir} from '../fileApi/rmdir'
+
+const deleteTest = async(filename: string) => {
+    const result = await deleteFile(filename) 
+    console.log(`delete ${result} file.`)
+}
+Promise.all([deleteTest('./data/hello.txt'), deleteTest('./data/test.json')])
+    .then(s => rmdir('./data'))
+    .then(dirname => console.log(`delete ${dirname} dir`))
+    .catch((e: Error) => console.log(e.message))
+```
+
+#### 테스트 파일 실행 코드
+```typescript
+ts-node ./src/test/deleteFile-test.ts
+```
+
+#### 테스트 파일 실행 결과
+```typescript
+delete ./data/test.json file.
+delete ./data/hello.txt file.
+delete ./data dir
+```
