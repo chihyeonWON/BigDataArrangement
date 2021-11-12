@@ -342,3 +342,65 @@ export {fileExists, mkdir, rmdir, writeFile, readFile, appendFile, deleteFile}
 ```typescript
 import {fileExists, mkdir, rmdir, writeFile, readFile, appendFile, deleteFile} from './src/fileApi'
 ```
+
+## 그럴듯한 가짜 데이터 만들기
+
+### 가짜 데이터 (이름, 이메일 주소, 직업, 생년월일, 간단한 프로필(sentence)을 속성으로 포함하는 IFake 인터페이스 생성
+
+src/fake/IFake.ts
+```typescript
+export interface IFake {
+    name: string
+    eamil: string
+    sentence: string
+    profession: string
+    birthday: Date
+}
+```
+
+#### chance 패키지를 사용해 IFake 인터페이스 형태의 데이터를 생성
+
+src/fake/makeFakeData.ts
+```typescript
+import Chance from 'chance'
+import {IFake} from './IFake'
+
+const c = new Chance
+
+export const makeFakeData = (): IFake => ({
+    name: c.name(),
+    eamil: c.email(),
+    profession: c.profession(),
+    birthday: c.birthday(),
+    sentence: c.sentence(),
+})
+export {IFake}
+```
+####
+가짜 데이터 만드는 makeFakeData 함수의 테스트 파일 생성
+
+src/test/makeFakeData-test.ts
+```typescript
+import {makeFakeData, IFake} from '../fake/makeFakeData'
+
+const fakeData: IFake = makeFakeData()
+console.log(fakeData)
+```
+
+#### 테스트 실행 코드
+```typescript
+ts-node ./src/test/makeFakeData-test.ts
+```
+
+#### 테스트 실행 결과
+
+전에 만든 IFake 인터페이스의 속성에 따른 가짜 데이터가 생성된다 (chance패키지=가짜 데이터 생성 패키지)
+```typescript
+{
+  name: 'Austin Hogan',
+  eamil: 'pucenpi@vub.au',
+  profession: 'Inside Sales',
+  birthday: 2000-04-28T22:12:34.300Z,
+  sentence: 'Hu caduvri keif cicuwec edju pog bov dor rehoh vip cavi raregum lace ikrod avaavu rikceh etakiet puf.'
+}
+```
