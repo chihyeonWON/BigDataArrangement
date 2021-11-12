@@ -436,4 +436,65 @@ values: [
 ]
 ```
 
+### numberOfItems만큼 IFake 객체를 생성하고 속성명과 속성값의 배열을 추출해 filename을 만드는 파일 생성
+
+src/fake/writeCsvFormatFakeData.ts
+```typescript
+import * as path from 'path'
+import {IFake, makeFakeData} from './makeFakeData'
+import {mkdir, writeFile, appendFile} from '../fileApi'
+import {range} from '../utils/range'
+
+export const writeCsvFormatFakeData = async(filename: string,
+    numberOfItems: number): Promise<string> => {
+        const dirname = path.dirname(filename)
+        await mkdir(dirname)
+        const comma = ',', newLine = '\n'
+        for(let n of range(numberOfItems)) {
+            const fake: IFake = makeFakeData()
+            if(n == 0) {
+                const keys = Object.keys(fake).join(comma)
+                await writeFile(filename, keys)
+            }
+            const values = Object.values(fake).join(comma)
+            await appendFile(filename, newLine + values)
+        }
+        return `write ${numberOfItems} items to ${filename} file`
+    }
+```
+
+#### src/fake에 담긴 함수들을 모두 export 하고 import 하는 index.ts 파일 생성
+
+src/fake/index.ts
+```typescript
+import {IFake, makeFakeData} from './makeFakeData'
+import { writeCsvFormatFakeData } from './writeCsvFormatFakeData'
+
+export {IFake, makeFakeData, writeCsvFormatFakeData}
+```
+
+#### CSV 파일 포맷으로 IFake 타입 객체를 저장하는 파일 생성
+src/writeCsv.ts
+```typescript
+import { writeCsvFormatFakeData } from "./fake";
+import { getFileNameAndNumber } from "./utils/getFileNameAndNumber";
+
+const [filename, numberOfFakeData] = getFileNameAndNumber('./data/fake', 1)
+const csvFilename = `${filename}-${numberOfFakeData}.csv`
+writeCsvFormatFakeData(csvFilename, numberOfFakeData)
+    .then(result => console.log(result))
+    .catch((e: Error) => console.log(e.message))
+```
+
+#### 테스트 실행 코드
+```typescript
+ts-node src/writeCsv.ts
+```
+
+#### 테스트 코드 실행 결과
+
+package.json이 있는 디렉터리에 data/fake-1.csv 파일이 생성된다.
+```typescript
+write 1 items to ./data/fake-1.csv file
+```
 
