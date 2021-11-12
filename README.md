@@ -325,3 +325,20 @@ delete ./data/test.json file.
 delete ./data/hello.txt file.
 delete ./data dir
 ```
+## 지금까지의 fileApi 코드들을 import 하고 하나의 폴더 ./src/fileApi 에서 export 하는 파일 생성
+```typescript
+import {fileExists} from './fileExists'
+import {mkdir} from './mkdir'
+import {rmdir} from './rmdir'
+import {writeFile} from './writeFile'
+import {readFile} from './readFile'
+import {appendFile} from './appendFile'
+import {deleteFile} from './deleteFile'
+
+export {fileExists, mkdir, rmdir, writeFile, readFile, appendFile, deleteFile}
+```
+
+#### 위의 모든 fileApi들을 import 하는 방법
+```typescript
+import {fileExists, mkdir, rmdir, writeFile, readFile, appendFile, deleteFile} from './src/fileApi'
+```
