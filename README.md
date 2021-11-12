@@ -404,3 +404,36 @@ ts-node ./src/test/makeFakeData-test.ts
   sentence: 'Hu caduvri keif cicuwec edju pog bov dor rehoh vip cavi raregum lace ikrod avaavu rikceh etakiet puf.'
 }
 ```
+
+### Object.keys 와 Object.values 함수를 이용하여 가짜데이터 객체의 속성이름과 값을 분리하여 배열로 저장
+
+src/test/keys-values-test.ts
+```typescript
+import {IFake, makeFakeData} from '../fake/makeFakeData'
+
+// 객체의 속성이름(keys) 속성값(values)을 분리해주는 자바스크립트의 Object.keys와 Object.values 함수를 이용   
+const data: IFake = makeFakeData()
+const keys = Object.keys(data)
+console.log('keys:', keys)
+const values = Object.values(data)
+console.log('values:', values)
+```
+
+#### 테스트 실행 코드
+```typescript
+ts-node ./src/test/keys-values-test.ts
+```
+
+#### 테스트 결과
+```typescript
+keys: [ 'name', 'eamil', 'profession', 'birthday', 'sentence' ]
+values: [
+  'Lester Ross',
+  'gahar@tucnoz.ch',
+  'Lead Software Test Engineer',
+  1991-04-02T08:05:04.479Z,
+  'Indif jezaowo odfema pusi laosopi hasubejok holabu vu mog feb awvodob biwzajod zu zekcu jecahogiv zas odo wivfu.'
+]
+```
+
+
