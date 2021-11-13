@@ -505,11 +505,12 @@ src/utils/zip.ts
 ```typescript
 export const zip = (keys:string[], values:any[]) => {
     const makeObject = (key:string, value:any) => ({[key]: value})
-    const mergeObject = (a:any[]) => a.reduce((sum, val) => ({...sum, ...val}, {})
+    const mergeObject = (a:any[]) => a.reduce((sum, val) => ({...sum, ...val}), {})
 
     let tmp = keys
         .map((key, index) => [key, values[index]])
-        .filter(a => makeObject(a[0], a[1]) )
+        .filter(a => a[0] && a[1])
+        .map(a => makeObject(a[0], a[1]) )
     return mergeObject(tmp)
 }
 ```
@@ -522,4 +523,34 @@ import {range} from './range'
 import {zip} from './zip'
 
 export {getFileNameAndNumber, FileNameAndNumber, range, zip}
+```
+#### zip 함수 테스트파일 zip-test.ts 파일 생성
+
+src/test/zip-test.ts
+```typescript
+import {zip} from '../utils'
+import {makeFakeData, IFake} from '../fake'
+const data = makeFakeData()
+const keys = Object.keys(data), values = Object.values(data)
+
+const fake: IFake = zip(keys, values) as IFake
+console.log(fake)
+```
+
+#### 테스트 실행 코드
+```typescript
+ts-node ./src/test/zip-test.ts
+```
+
+#### 테스트 실행 결과
+가짜 데이터가 속성명: 속성값으로 이루어진 IFake 타입 객체로 만들어진다.
+
+```typescript
+{
+  name: 'Alberta Clarke',
+  eamil: 'vo@pow.ec',
+  profession: 'Executive Recruiter',
+  birthday: 1961-08-15T18:10:09.786Z,
+  sentence: 'Gimnalku sidic aho do tewcezsu akgin kivufca koeha cahol wofceg kunciw colhun bawnec gefbolu.'
+}
 ```
