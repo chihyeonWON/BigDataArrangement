@@ -497,4 +497,29 @@ package.json이 있는 디렉터리에 data/fake-1.csv 파일이 생성된다.
 ```typescript
 write 1 items to ./data/fake-1.csv file
 ```
+### zip 함수 만들기
 
+#### 객체의 속성명 배열과 속성값 배열을 결합해 객체를 만드는 zip 함수 구현
+
+src/utils/zip.ts
+```typescript
+export const zip = (keys:string[], values:any[]) => {
+    const makeObject = (key:string, value:any) => ({[key]: value})
+    const mergeObject = (a:any[]) => a.reduce((sum, val) => ({...sum, ...val}, {})
+
+    let tmp = keys
+        .map((key, index) => [key, values[index]])
+        .filter(a => makeObject(a[0], a[1]) )
+    return mergeObject(tmp)
+}
+```
+#### utils 폴더안의 함수들을 import하고 index.ts 파일에서 모두 export 하기
+
+src/utils/index.ts
+```typescript
+import { getFileNameAndNumber, FileNameAndNumber } from "./getFileNameAndNumber";
+import {range} from './range'
+import {zip} from './zip'
+
+export {getFileNameAndNumber, FileNameAndNumber, range, zip}
+```
